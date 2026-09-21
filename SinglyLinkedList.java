@@ -131,13 +131,13 @@ public class SinglyLinkedList<E extends Comparable<E>> {
             // sort elements
             sortedNodes.sort((a, b) -> a.getElement().compareTo(b.getElement()));
             
-            // now that eles are sorted, we can map the element in the LL to its appropriate element and store in a hashmap
+            // now that eles are sorted, we can map each node in the LL to its appropriate node (with matching ele) and store in a hashmap
             Map<Node<E>, Node<E>> replacements = new HashMap<>();
             for (int i = 0; i < size; i++) {
                 replacements.put(sortedNodes.get(i), sortedNodes.get(size - 1 - i));
             }
 
-
+            // make list of nodes in final order to be returned
             List<Node<E>> replacedNodes = new ArrayList<>();
             curr = head;
             while (curr != null) {
@@ -145,6 +145,7 @@ public class SinglyLinkedList<E extends Comparable<E>> {
                 curr = curr.getNext();
             }
 
+            //link em up!
             for (int i = 0; i <= size - 1; i++) {
                 Node<E> node = replacedNodes.get(i);
                 if (i == 0) {
