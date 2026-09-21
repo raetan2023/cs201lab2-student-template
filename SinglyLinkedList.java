@@ -1,4 +1,6 @@
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class SinglyLinkedList<E extends Comparable<E>> {
     private Node<E> head = null;
@@ -100,8 +102,61 @@ public class SinglyLinkedList<E extends Comparable<E>> {
     }
 
     // write your codes here
+    // write your codes here
+    public Node<E> findNode(E e) {
+        Node<E> curr = head;
+        while (curr != null) {
+            E ele = curr.getElement();
+
+            if (ele.equals(e)) {
+                return curr;
+            }
+
+            curr = curr.getNext();
+        }
+        return null;
+    }
+
     public void swap(){
-        
+        if (!isEmpty()) {
+            // collect all the elements in nodes of LL
+            List<E> elements = new ArrayList<>();
+            Node<E> curr = head;
+            while (curr != null) {
+                elements.add(curr.getElement());
+                curr = curr.getNext();
+            }
+
+            // sort elements
+            Collections.sort(elements);
+            
+            // now that eles are sorted, we can map the element in the LL to its appropriate element and store in another list
+            List<Node<E>> nodes = new ArrayList<>();
+            curr = head;
+            while (curr != null) {
+                E ele = curr.getElement();
+                int idx = elements.indexOf(ele);
+                int replacementIdx = size - 1 - idx;
+                E replacementEle = elements.get(replacementIdx);
+                Node<E> replacementNode = findNode(replacementEle);
+                nodes.add(replacementNode);
+                curr = curr.getNext();
+            }
+
+            for (int i = 0; i <= size - 1; i++) {
+                Node<E> node = nodes.get(i);
+                if (i == 0) {
+                    head = node;
+                }
+                if (i == size - 1) {
+                    node.setNext(null);
+                    tail = node;
+                    return;
+                }
+                node.setNext(nodes.get(i+1));
+            }
+
+        }
 
     }
    
