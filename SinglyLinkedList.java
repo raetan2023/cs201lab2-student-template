@@ -1,6 +1,7 @@
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SinglyLinkedList<E extends Comparable<E>> {
     private Node<E> head = null;
@@ -120,31 +121,32 @@ public class SinglyLinkedList<E extends Comparable<E>> {
     public void swap(){
         if (!isEmpty()) {
             // collect all the elements in nodes of LL
-            List<E> elements = new ArrayList<>();
+            List<Node<E>> sortedNodes = new ArrayList<>();
             Node<E> curr = head;
             while (curr != null) {
-                elements.add(curr.getElement());
+                sortedNodes.add(curr);
                 curr = curr.getNext();
             }
 
             // sort elements
-            Collections.sort(elements);
+            sortedNodes.sort((a, b) -> a.getElement().compareTo(b.getElement()));
             
-            // now that eles are sorted, we can map the element in the LL to its appropriate element and store in another list
-            List<Node<E>> nodes = new ArrayList<>();
+            // now that eles are sorted, we can map the element in the LL to its appropriate element and store in a hashmap
+            Map<Node<E>, Node<E>> replacements = new HashMap<>();
+            for (int i = 0; i < size; i++) {
+                replacements.put(sortedNodes.get(i), sortedNodes.get(size - 1 - i));
+            }
+
+
+            List<Node<E>> replacedNodes = new ArrayList<>();
             curr = head;
             while (curr != null) {
-                E ele = curr.getElement();
-                int idx = elements.indexOf(ele);
-                int replacementIdx = size - 1 - idx;
-                E replacementEle = elements.get(replacementIdx);
-                Node<E> replacementNode = findNode(replacementEle);
-                nodes.add(replacementNode);
+                replacedNodes.add(replacements.get(curr));
                 curr = curr.getNext();
             }
 
             for (int i = 0; i <= size - 1; i++) {
-                Node<E> node = nodes.get(i);
+                Node<E> node = replacedNodes.get(i);
                 if (i == 0) {
                     head = node;
                 }
@@ -153,7 +155,7 @@ public class SinglyLinkedList<E extends Comparable<E>> {
                     tail = node;
                     return;
                 }
-                node.setNext(nodes.get(i+1));
+                node.setNext(replacedNodes.get(i+1));
             }
 
         }
